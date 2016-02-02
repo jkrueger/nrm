@@ -16,8 +16,8 @@ endef
 define CXX_RECIPE
 	@echo [C++] $$<
 	$(VERBOSE)mkdir -p $$(dir $$@)
-	$(VERBOSE)$(CXX) $(CXX_FLAGS) $$(cxx_local_flags) -include-pch $$(cxx_local_pch) -c -MM -MT $$@ -MF $$(patsubst %.o,%.d,$$@) $$<
-	$(VERBOSE)$(CXX) $(CXX_FLAGS) $$(cxx_local_flags) -include-pch $$(cxx_local_pch) -c -o $$@ $$<
+	$(VERBOSE)$(CXX) $(CXX_FLAGS) $$(cxx_local_flags) $$(cxx_local_pch) -c -MM -MT $$@ -MF $$(patsubst %.o,%.d,$$@) $$<
+	$(VERBOSE)$(CXX) $(CXX_FLAGS) $$(cxx_local_flags) $$(cxx_local_pch) -c -o $$@ $$<
 endef
 
 define CXX_LD_RECIPE
