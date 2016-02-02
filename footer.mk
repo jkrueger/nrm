@@ -2,18 +2,18 @@
 
 define RECIPES
     __t := $(strip $1)
+    __odir := $(BUILD_DIR)/$(d)/$$(__t)
+    __tdir := $(BUILD_DIR)/$($(strip $1)_target_dir_$(d))
+    __qtgt := $$(__tdir)/$$(__t)
     $$(__t)_pch_$(d) := $$($$(__t)_precompiled_header_$(d):%.hpp=%.hpp.pch)
-    $$(__t)_pch_$(d) := $$($$(__t)_pch_$(d):%=$(BUILD_DIR)/$(d)/%)
+    $$(__t)_pch_$(d) := $$($$(__t)_pch_$(d):%=$(BUILD_DIR)/$(d)/$$(__t)/%)
     $$(__t)_objects_$(d) := $$($$(__t)_sources_$(d):%.cpp=%.o)
     $$(__t)_objects_$(d) := $$($$(__t)_objects_$(d):%.c=%.o)
-    $$(__t)_objects_$(d) := $$($$(__t)_objects_$(d):%=$(BUILD_DIR)/$(d)/%)
+    $$(__t)_objects_$(d) := $$($$(__t)_objects_$(d):%=$(BUILD_DIR)/$(d)/$$(__t)/%)
     $$(__t)_deps_$(d)    := $$($$(__t)_sources_$(d):%.cpp=%.d)
 		$$(__t)_deps_$(d)    := $$($$(__t)_deps_$(d):%.c=%.d)
     $$(__t)_deps_$(d)    += $$($$(__t)_precompiled_header_$(d):%.hpp=%.d)
-    $$(__t)_deps_$(d)    := $$($$(__t)_deps_$(d):%=$(BUILD_DIR)/$(d)/%)
-    __odir := $(BUILD_DIR)/$(d)
-    __tdir := $(BUILD_DIR)/$($(strip $1)_target_dir_$(d))
-    __qtgt := $$(__tdir)/$$(__t)
+    $$(__t)_deps_$(d)    := $$($$(__t)_deps_$(d):%=$(BUILD_DIR)/$(d)/$$(__t)/%)
     $$(__odir) $$(__tdir)::
 	$(VERBOSE)mkdir -p $$@
     $$(__qtgt): $$($$(__t)_objects_$(d)) | $$(__tdir)
@@ -24,7 +24,7 @@ define RECIPES
     $$(__qtgt): ld_local_flags  := $$($$(__t)_ld_flags_$(d))
     $$(__odir)/%.hpp.pch: $(d)/src/%.hpp
 	$(PCH_RECIPE)
-    $$(__odir)/%.o: $(d)/src/%.cpp | $$(__odir) $$(__odir)/%.hpp.pch
+    $$(__odir)/%.o: $(d)/src/%.cpp | $$(__odir) $$($$(__t)_pch_$(d))
 	$(CXX_RECIPE)
     $$(__odir)/%.o: $(d)/src/%.c | $$(__odir)
 	$(C_RECIPE)
