@@ -8,7 +8,7 @@ define RECIPES
     $$(__t)_objects_$(d) := $$($$(__t)_objects_$(d):%.c=%.o)
     $$(__t)_objects_$(d) := $$($$(__t)_objects_$(d):%=$(BUILD_DIR)/$(d)/%)
     $$(__t)_deps_$(d)    := $$($$(__t)_sources_$(d):%.cpp=%.d)
-	$$(__t)_deps_$(d)    := $$($$(__t)_deps_$(d):%.c=%.d)
+		$$(__t)_deps_$(d)    := $$($$(__t)_deps_$(d):%.c=%.d)
     $$(__t)_deps_$(d)    += $$($$(__t)_precompiled_header_$(d):%.hpp=%.d)
     $$(__t)_deps_$(d)    := $$($$(__t)_deps_$(d):%=$(BUILD_DIR)/$(d)/%)
     __odir := $(BUILD_DIR)/$(d)
@@ -24,7 +24,7 @@ define RECIPES
     $$(__qtgt): ld_local_flags  := $$($$(__t)_ld_flags_$(d))
     $$(__odir)/%.hpp.pch: $(d)/src/%.hpp
 	$(PCH_RECIPE)
-    $$(__odir)/%.o: $(d)/src/%.cpp | $$(__odir) $$($$(__t)_pch_$(d))
+    $$(__odir)/%.o: $(d)/src/%.cpp | $$(__odir) $$(__odir)/%.hpp.pch
 	$(CXX_RECIPE)
     $$(__odir)/%.o: $(d)/src/%.c | $$(__odir)
 	$(C_RECIPE)
