@@ -9,7 +9,13 @@ OS := $(shell uname)
 endif
 
 ifndef ARCH
-ARCH := x86_64
+ARCH := $(shell uname -p)
+endif
+
+ifeq ($(OS),Darwin)
+	so := dylib
+else
+	so := so
 endif
 
 ifndef VERBOSE
